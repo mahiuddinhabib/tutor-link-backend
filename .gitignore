@@ -7,14 +7,3 @@ src/app/modules/book
 src/app/modules/order
 src/app/modules/profile
 src/app/modules/user
-
-src/app/routes
-
-src/enums
-
-
-
-prisma/
-src/app/modules/auth
-src/app/modules/subject
-src/helpers/excludeField.ts
