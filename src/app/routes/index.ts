@@ -3,6 +3,7 @@ import { AuthRoutes } from '../modules/auth/auth.route';
 import { UserRoutes } from '../modules/user/user.route';
 import { SubjectRoutes } from '../modules/subject/subject.route';
 import { ServiceRoutes } from '../modules/service/service.route';
+import { AvailableServiceRoutes } from '../modules/availableService/availableService.route';
 // import { OrderRoutes } from '../modules/order/order.route';
 // import { ProfileRoutes } from '../modules/profile/profile.route';
 
@@ -24,6 +25,10 @@ const moduleRoutes = [
   {
     path: '/services',
     route: ServiceRoutes,
+  },
+  {
+    path: '/available-services',
+    route: AvailableServiceRoutes,
   },
    /*{
     path: '/orders',

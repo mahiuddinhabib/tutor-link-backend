@@ -37,15 +37,19 @@ model Service {
   price     Float
   subjectId String
 
-  subject         Subject           @relation(fields: [subjectId], references: [id])
-  reviewAndRating ReviewAndRating[]
-  tutor           User              @relation(fields: [tutorId], references: [id])
+  subject          Subject            @relation(fields: [subjectId], references: [id])
+  reviewAndRating  ReviewAndRating[]
+  tutor            User               @relation(fields: [tutorId], references: [id])
+  AvailableService AvailableService[]
 }
 
 model AvailableService {
   id        String  @id @default(uuid())
+  serviceId String
   startTime String
   isBooked  Boolean @default(false)
+
+  service Service @relation(fields: [serviceId], references: [id])
 }
 
 model Booking {
