@@ -3,9 +3,7 @@ node_modules
 .vercel
 
 # Temporary ignore
-src/app/modules/auth
 src/app/modules/book
-src/app/modules/category
 src/app/modules/order
 src/app/modules/profile
 src/app/modules/user
@@ -14,8 +12,9 @@ src/app/routes
 
 src/enums
 
-src/helpers/excludeField.ts
+
 
 prisma/
-
-
+src/app/modules/auth
+src/app/modules/subject
+src/helpers/excludeField.ts
