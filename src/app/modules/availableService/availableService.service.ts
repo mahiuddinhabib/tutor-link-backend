@@ -48,9 +48,6 @@ const updateAvailableService = async (
   payload: Partial<AvailableService>
 ): Promise<AvailableService | null> => {
   const isExist = await prisma.availableService.findUnique({
-    include:{
-      service: true
-    },
     where: {
       id,
     },
