@@ -20,7 +20,7 @@ model User {
   address         String
   profileImg      String
   bookings        Booking[]
-  reviewAndRating ReviewAndRating[]
+  Feedback Feedback[]
   Service         Service[]
 }
 
@@ -38,7 +38,7 @@ model Service {
   subjectId String
 
   subject          Subject            @relation(fields: [subjectId], references: [id])
-  reviewAndRating  ReviewAndRating[]
+  Feedback  Feedback[]
   tutor            User               @relation(fields: [tutorId], references: [id])
   availableService AvailableService[]
 }
@@ -65,7 +65,7 @@ model Booking {
   availableService AvailableService @relation(fields: [availableServiceId], references: [id])
 }
 
-model ReviewAndRating {
+model Feedback {
   id        String @id @default(uuid())
   review    String
   rating    Int

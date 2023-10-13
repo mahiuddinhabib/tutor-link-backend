@@ -7,8 +7,8 @@ import { SubjectService } from './subject.service';
 
 const createSubject: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    const category = req.body;
-    const result = await SubjectService.createSubject(category);
+    const subject = req.body;
+    const result = await SubjectService.createSubject(subject);
 
     sendResponse<Subject>(res, {
       success: true,
