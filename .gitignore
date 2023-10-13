@@ -6,4 +6,3 @@ node_modules
 src/app/modules/book
 src/app/modules/booking1
 src/app/modules/profile
-src/app/modules/user
