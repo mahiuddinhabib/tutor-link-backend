@@ -3,6 +3,7 @@ import { AuthRoutes } from '../modules/auth/auth.route';
 import { AvailableServiceRoutes } from '../modules/availableService/availableService.route';
 import { BookingRoutes } from '../modules/booking/booking.route';
 import { FeedbackRoutes } from '../modules/feedback/feedback.route';
+import { ProfileRoutes } from '../modules/profile/profile.route';
 import { ServiceRoutes } from '../modules/service/service.route';
 import { SubjectRoutes } from '../modules/subject/subject.route';
 import { UserRoutes } from '../modules/user/user.route';
@@ -38,11 +39,10 @@ const moduleRoutes = [
     path: '/feedback',
     route: FeedbackRoutes,
   },
-  /*
   {
     path: '/profile',
     route: ProfileRoutes,
-  }, */
+  },
 ];
 
 moduleRoutes.forEach(route => router.use(route.path, route.route));
