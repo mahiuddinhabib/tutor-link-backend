@@ -96,25 +96,83 @@ const updateBookingStatus = async (
         },
       });
     } else if (updatedStatus === 'rejected') {
+      await trx.pastBooking.create({
+        data: {
+          status: 'rejected',
+          userId: updatedBooking.userId,
+          availableServiceId: updatedBooking.availableServiceId,
+        },
+      });
       await trx.booking.delete({
         where: {
           id,
         },
       });
+    } else {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to update status');
     }
+    // console.log(updatedBooking, pastBooking);
     return updatedBooking;
   });
 
-  if (updatedResult) {
-    const result = await prisma.booking.findUnique({
-      where: {
-        id,
-      },
-    });
-    return result;
-  } else {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to update status');
+  return updatedResult;
+};
+
+const cancelOrCompleteBooking = async (
+  id: string,
+  user: JwtPayload | null,
+  updatedStatus: string
+): Promise<Partial<Booking> | null> => {
+  const isExist = await prisma.booking.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Booking not found');
   }
+
+  if (user?.userId !== isExist?.userId) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'forbidden');
+  }
+
+  const updatedResult = await prisma.$transaction(async trx => {
+    let deletedBooking;
+    if (
+      (isExist.status === 'pending' && updatedStatus === 'cancelled') ||
+      (isExist.status === 'approved' && updatedStatus === 'completed')
+    ) {
+      await trx.availableService.update({
+        where: {
+          id: isExist.availableServiceId,
+        },
+        data: {
+          isBooked: false,
+        },
+      });
+
+      await trx.booking.delete({
+        where: {
+          id,
+        },
+      });
+
+      deletedBooking = await trx.pastBooking.create({
+        data: {
+          status: updatedStatus,
+          userId: isExist.userId,
+          availableServiceId: isExist.availableServiceId,
+        },
+      });
+    } else {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to update booking');
+    }
+
+    return deletedBooking;
+  });
+
+  return updatedResult;
 };
 
 export const BookingService = {
@@ -122,4 +180,5 @@ export const BookingService = {
   getAllBookings,
   getSingleBooking,
   updateBookingStatus,
+  cancelOrCompleteBooking,
 };

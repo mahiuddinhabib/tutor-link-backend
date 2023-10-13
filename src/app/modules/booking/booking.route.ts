@@ -26,11 +26,19 @@ router.post(
   BookingController.createBooking
 );
 
+
 router.patch(
   '/:id',
   validateRequest(BookingValidation.updateBookingStatusZodSchema),
   auth(USER_ROLE.ADMIN),
   BookingController.updateBookingStatus
+);
+
+router.delete(
+  '/:id',
+  validateRequest(BookingValidation.updateBookingStatusZodSchema),
+  auth(USER_ROLE.CUSTOMER),
+  BookingController.cancelOrCompleteBooking
 );
 
 export const BookingRoutes = router;

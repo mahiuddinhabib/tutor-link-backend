@@ -1,9 +1,9 @@
+import { Booking } from '@prisma/client';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { BookingService } from './booking.service';
-import { Booking } from '@prisma/client';
 
 const createBooking = catchAsync(async (req: Request, res: Response) => {
   const result = await BookingService.createBooking(
@@ -30,7 +30,7 @@ const getAllBookings = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleBooking = catchAsync(async (req: Request, res: Response) => {
-    const {id} = req.params;
+  const { id } = req.params;
   const result = await BookingService.getSingleBooking(req.user, id);
 
   sendResponse<Booking>(res, {
@@ -55,9 +55,30 @@ const updateBookingStatus = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const cancelOrCompleteBooking = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const updatedStatus = req.body?.status;
+
+    const result = await BookingService.cancelOrCompleteBooking(
+      id,
+      req.user,
+      updatedStatus
+    );
+
+    sendResponse<Partial<Booking>>(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Booking completed/cancelled successfully',
+      data: result,
+    });
+  }
+);
+
 export const BookingController = {
   createBooking,
   getAllBookings,
   getSingleBooking,
-  updateBookingStatus
+  updateBookingStatus,
+  cancelOrCompleteBooking,
 };

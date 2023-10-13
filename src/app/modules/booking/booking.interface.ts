@@ -1,3 +1,3 @@
 export type IBookingCreateData = { userId: string; availableServiceId: number };
 
-export type IBookingStatus = 'pending' | 'approved' | 'rejected';
+export type IBookingStatus = 'pending' | 'approved' | 'rejected' | 'completed' | 'cancelled';

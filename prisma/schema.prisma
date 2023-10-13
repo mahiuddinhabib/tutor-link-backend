@@ -11,17 +11,18 @@ datasource db {
 }
 
 model User {
-  id              String            @id @default(uuid())
-  name            String
-  email           String            @unique
-  password        String
-  role            String
-  contactNo       String
-  address         String
-  profileImg      String
-  bookings        Booking[]
-  Feedback Feedback[]
-  Service         Service[]
+  id          String        @id @default(uuid())
+  name        String
+  email       String        @unique
+  password    String
+  role        String
+  contactNo   String
+  address     String
+  profileImg  String
+  bookings    Booking[]
+  Feedback    Feedback[]
+  Service     Service[]
+  pastBooking pastBooking[]
 }
 
 model Subject {
@@ -38,7 +39,7 @@ model Service {
   subjectId String
 
   subject          Subject            @relation(fields: [subjectId], references: [id])
-  Feedback  Feedback[]
+  Feedback         Feedback[]
   tutor            User               @relation(fields: [tutorId], references: [id])
   availableService AvailableService[]
 }
@@ -63,6 +64,16 @@ model Booking {
 
   user             User             @relation(fields: [userId], references: [id])
   availableService AvailableService @relation(fields: [availableServiceId], references: [id])
+}
+
+model pastBooking {
+  id                 String   @id @default(uuid())
+  status             String
+  userId             String
+  availableServiceId String
+  createdAt          DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Feedback {
