@@ -86,3 +86,9 @@ model Feedback {
   user    User    @relation(fields: [userId], references: [id])
   service Service @relation(fields: [serviceId], references: [id])
 }
+
+model FAQ{
+  id String @id @default(uuid())
+  question String
+  answer String
+}
