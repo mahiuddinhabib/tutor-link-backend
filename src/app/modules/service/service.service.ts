@@ -26,7 +26,7 @@ const getAllServices = async (
   filters: IServiceFilterableField,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Service[]>> => {
-  const { page, size, skip } =
+  const { page, limit, skip } =
     paginationHelpers.calculatePagination(paginationOptions);
   const { search, minPrice, maxPrice, ...filterData } = filters;
 
@@ -96,7 +96,7 @@ const getAllServices = async (
     },
     where: whereConditions,
     skip,
-    take: size,
+    take: limit,
     orderBy:
       paginationOptions.sortBy && paginationOptions.sortOrder
         ? { [paginationOptions.sortBy]: paginationOptions.sortOrder }
@@ -108,12 +108,12 @@ const getAllServices = async (
     where: whereConditions,
   });
 
-  const totalPage = Math.ceil(total / size);
+  const totalPage = Math.ceil(total / limit);
 
   return {
     meta: {
       page,
-      size,
+      limit,
       total,
       totalPage,
     },
@@ -125,7 +125,7 @@ const getServicesBySubject = async (
   id: string,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Service[]>> => {
-  const { page, size, skip } =
+  const { page, limit, skip } =
     paginationHelpers.calculatePagination(paginationOptions);
 
   const result = await prisma.service.findMany({
@@ -137,7 +137,7 @@ const getServicesBySubject = async (
       subjectId: id,
     },
     skip,
-    take: size,
+    take: limit,
     orderBy:
       paginationOptions.sortBy && paginationOptions.sortOrder
         ? { [paginationOptions.sortBy]: paginationOptions.sortOrder }
@@ -152,12 +152,12 @@ const getServicesBySubject = async (
     },
   });
 
-  const totalPage = Math.ceil(total / size);
+  const totalPage = Math.ceil(total / limit);
 
   return {
     meta: {
       page,
-      size,
+      limit,
       total,
       totalPage,
     },

@@ -10,8 +10,10 @@ import { serviceFilterableFields } from './service.constant';
 
 const createService: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    const service = req.body;
-    const result = await ServiceService.createService(service);
+    const {price, ...rest} = req.body;
+    const numPrice = Number(price);
+
+    const result = await ServiceService.createService({price: numPrice, ...rest});
 
     sendResponse<Service>(res, {
       success: true,
@@ -64,9 +66,10 @@ const getSingleService = catchAsync(async (req: Request, res: Response) => {
 
 const updateService = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const updatedData = req.body;
+      const { price, ...rest } = req.body;
+      const numPrice = Number(price);
 
-  const result = await ServiceService.updateService(id, updatedData);
+  const result = await ServiceService.updateService(id, {price: numPrice, ...rest});
 
   sendResponse<Service>(res, {
     success: true,
