@@ -29,6 +29,18 @@ const getAllBookings = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+const getAllPastBookings = catchAsync(async (req: Request, res: Response) => {
+  const result = await BookingService.getAllPastBookings(req.user);
+
+  sendResponse<Partial<Booking>[]>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Past bookings fetched successfully',
+    data: result,
+  });
+});
+
 const getSingleBooking = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await BookingService.getSingleBooking(req.user, id);
@@ -81,4 +93,5 @@ export const BookingController = {
   getSingleBooking,
   updateBookingStatus,
   cancelOrCompleteBooking,
+  getAllPastBookings,
 };

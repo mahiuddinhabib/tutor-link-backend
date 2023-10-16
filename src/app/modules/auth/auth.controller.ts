@@ -13,8 +13,8 @@ const createUser: RequestHandler = catchAsync(
     const result = await AuthService.createUser(user);
 
     sendResponse<Partial<User>>(res, {
-      success: true,
       statusCode: httpStatus.OK,
+      success: true,
       message: 'User created successfully',
       data: result,
     });
@@ -33,10 +33,10 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   res.cookie('refreshToken', refreshToken, cookieOptions);
 
   sendResponse<ILoginUserResponse>(res, {
-    success: true,
     statusCode: 200,
+    success: true,
     message: 'User signin successfully!',
-    token: data.accessToken,
+    data: data,
   });
 });
 

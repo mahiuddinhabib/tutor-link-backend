@@ -27,7 +27,11 @@ const getAllBookings = async (
   if (user?.role === USER_ROLE.ADMIN) {
     bookings = await prisma.booking.findMany({
       include: {
-        availableService: true,
+        availableService: {
+          include: {
+            service: true
+          },
+        },
       },
     });
   } else {
@@ -38,11 +42,33 @@ const getAllBookings = async (
         },
       },
       include: {
-        availableService: true,
+        availableService: {
+          include: {
+            service: true
+          },
+        },
       },
     });
   }
   return bookings;
+};
+
+const getAllPastBookings = async (
+  user: JwtPayload | null
+): Promise<Partial<Booking>[] | null> => {
+  let pastBookings;
+  if (user?.role === USER_ROLE.ADMIN) {
+    pastBookings = await prisma.pastBooking.findMany();
+  } else {
+    pastBookings = await prisma.pastBooking.findMany({
+      where: {
+        userId: {
+          equals: user?.userId,
+        },
+      },
+    });
+  }
+  return pastBookings;
 };
 
 const getSingleBooking = async (
@@ -181,4 +207,5 @@ export const BookingService = {
   getSingleBooking,
   updateBookingStatus,
   cancelOrCompleteBooking,
+  getAllPastBookings,
 };

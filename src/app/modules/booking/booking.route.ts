@@ -14,11 +14,17 @@ router.get(
 );
 
 router.get(
-  '/:id',
+  '/past-booking',
   auth(USER_ROLE.ADMIN, USER_ROLE.CUSTOMER),
-  BookingController.getSingleBooking
-);
-
+  BookingController.getAllPastBookings
+  );
+  
+  router.get(
+    '/:id',
+    auth(USER_ROLE.ADMIN, USER_ROLE.CUSTOMER),
+    BookingController.getSingleBooking
+  );
+  
 router.post(
   '/create-booking',
   validateRequest(BookingValidation.createBookingZodSchema),
