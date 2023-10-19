@@ -18,15 +18,15 @@ router.patch(
   UserController.updateMyProfile
 );
  */
-router.get('/:id', auth(USER_ROLE.ADMIN), UserController.getSingleUser);
+router.get('/:id', auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN), UserController.getSingleUser);
 router.patch(
   '/:id',
-  auth(USER_ROLE.ADMIN),
+  auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN),
   validateRequest(UserValidation.updateUserZodSchema),
   UserController.updateUser
 );
 
-router.delete('/:id', auth(USER_ROLE.ADMIN), UserController.deleteUser);
+router.delete('/:id', auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN), UserController.deleteUser);
 
-router.get('/', auth(USER_ROLE.ADMIN), UserController.getAllUsers);
+router.get('/', auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN), UserController.getAllUsers);
 export const UserRoutes = router;

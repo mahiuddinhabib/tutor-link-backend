@@ -39,16 +39,14 @@ const getAllServices = catchAsync(async (req: Request, res: Response) => {
 
 const getServicesBySubject = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const paginationOptions = pick(req.query, paginationFields);
 
-  const result = await ServiceService.getServicesBySubject(id, paginationOptions);
+  const result = await ServiceService.getServicesBySubject(id);
 
   sendResponse<Service[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Services with associated subject data fetched successfully',
-    meta: result.meta,
-    data: result.data,
+    data: result,
   });
 });
 

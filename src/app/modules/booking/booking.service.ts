@@ -29,9 +29,14 @@ const getAllBookings = async (
       include: {
         availableService: {
           include: {
-            service: true
+            service: {
+              include: {
+                tutor: true,
+              },
+            },
           },
         },
+        user: true,
       },
     });
   } else {
@@ -44,7 +49,11 @@ const getAllBookings = async (
       include: {
         availableService: {
           include: {
-            service: true
+            service: {
+              include: {
+                tutor: true,
+              },
+            },
           },
         },
       },
@@ -58,7 +67,11 @@ const getAllPastBookings = async (
 ): Promise<Partial<Booking>[] | null> => {
   let pastBookings;
   if (user?.role === USER_ROLE.ADMIN) {
-    pastBookings = await prisma.pastBooking.findMany();
+    pastBookings = await prisma.pastBooking.findMany({
+      include:{
+        user: true,
+      },
+    });
   } else {
     pastBookings = await prisma.pastBooking.findMany({
       where: {
@@ -66,6 +79,9 @@ const getAllPastBookings = async (
           equals: user?.userId,
         },
       },
+      include: {
+        user: true
+      }
     });
   }
   return pastBookings;

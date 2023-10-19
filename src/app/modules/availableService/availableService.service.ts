@@ -20,8 +20,12 @@ const getAllAvailableServices = async (): Promise<
 > => {
   const availableServices = await prisma.availableService.findMany({
     include:{
-      service: true
-    }
+      service: {
+        include:{
+          tutor: true
+        }
+      },
+    },
   });
   return availableServices;
 };

@@ -15,7 +15,12 @@ const createFeedback = async (
 };
 
 const getAllFeedbacks = async (): Promise<Feedback[] | null> => {
-  const feedbacks = await prisma.feedback.findMany();
+  const feedbacks = await prisma.feedback.findMany({
+    include: {
+      user: true,
+      service: true,
+    },
+  });
   return feedbacks;
 };
 
