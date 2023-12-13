@@ -19,11 +19,12 @@ const getAllAvailableServices = async (): Promise<
   AvailableService[] | null
 > => {
   const availableServices = await prisma.availableService.findMany({
-    include:{
+    include: {
       service: {
-        include:{
-          tutor: true
-        }
+        include: {
+          tutor: true,
+          subject: true,
+        },
       },
     },
   });
@@ -34,8 +35,8 @@ const getSingleAvailableService = async (
   id: string
 ): Promise<AvailableService | null> => {
   const result = await prisma.availableService.findUnique({
-    include:{
-      service:true
+    include: {
+      service: true,
     },
     where: {
       id,
@@ -62,8 +63,8 @@ const updateAvailableService = async (
   }
 
   const result = await prisma.availableService.update({
-    include:{
-      service: true
+    include: {
+      service: true,
     },
     where: {
       id,
@@ -77,8 +78,8 @@ const deleteAvailableService = async (
   id: string
 ): Promise<AvailableService | null> => {
   const isExist = await prisma.availableService.findUnique({
-    include:{
-      service:true
+    include: {
+      service: true,
     },
     where: {
       id,
