@@ -11,13 +11,32 @@ const createBooking = async (
   user: JwtPayload | null,
   availableServiceId: string
 ): Promise<Booking | null> => {
-  const createdBooking = await prisma.booking.create({
-    data: { userId: user?.userId, availableServiceId },
-    include: {
-      availableService: true,
-    },
+
+  const bookingResult = await prisma.$transaction(async trx => {
+    const createdBooking = await trx.booking.create({
+      data: { userId: user?.userId, availableServiceId },
+      include: {
+        availableService: true,
+      },
+    });
+
+    if (!createdBooking) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to create booking');
+    }
+
+    await trx.availableService.update({
+      where: {
+        id: availableServiceId,
+      },
+      data: {
+        isRequested: true,
+      },
+    });
+
+    return createdBooking;
   });
-  return createdBooking;
+
+  return bookingResult;
 };
 
 const getAllBookings = async (
@@ -122,6 +141,13 @@ const updateBookingStatus = async (
       data: {
         status: updatedStatus,
       },
+      include: {
+        availableService: {
+          include: {
+            service: true,
+          },
+        },
+      },
     });
 
     if (!updatedBooking) {
@@ -138,11 +164,20 @@ const updateBookingStatus = async (
         },
       });
     } else if (updatedStatus === 'rejected') {
+      await trx.availableService.update({
+        where: {
+          id: updatedBooking?.availableServiceId,
+        },
+        data: {
+          isRequested: false,
+        },
+      });
+
       await trx.pastBooking.create({
         data: {
           status: 'rejected',
           userId: updatedBooking.userId,
-          availableServiceId: updatedBooking.availableServiceId,
+          serviceTitle: updatedBooking.availableService.service.title,
         },
       });
       await trx.booking.delete({
@@ -169,6 +204,13 @@ const cancelOrCompleteBooking = async (
     where: {
       id,
     },
+    include: {
+      availableService: {
+        include: {
+          service: true,
+        },
+      },
+    },
   });
 
   if (!isExist) {
@@ -191,6 +233,7 @@ const cancelOrCompleteBooking = async (
         },
         data: {
           isBooked: false,
+          isRequested: false,
         },
       });
 
@@ -204,7 +247,7 @@ const cancelOrCompleteBooking = async (
         data: {
           status: updatedStatus,
           userId: isExist.userId,
-          availableServiceId: isExist.availableServiceId,
+          serviceTitle: isExist.availableService.service.title,
         },
       });
     } else {

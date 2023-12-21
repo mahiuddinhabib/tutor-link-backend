@@ -45,10 +45,11 @@ model Service {
 }
 
 model AvailableService {
-  id        String  @id @default(uuid())
-  serviceId String
-  startTime String
-  isBooked  Boolean @default(false)
+  id          String  @id @default(uuid())
+  serviceId   String
+  startTime   String
+  isBooked    Boolean @default(false)
+  isRequested Boolean @default(false)
 
   service Service  @relation(fields: [serviceId], references: [id])
   booking Booking?
@@ -70,7 +71,7 @@ model pastBooking {
   id                 String   @id @default(uuid())
   status             String
   userId             String
-  availableServiceId String
+  serviceTitle       String
   createdAt          DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
@@ -87,8 +88,8 @@ model Feedback {
   service Service @relation(fields: [serviceId], references: [id])
 }
 
-model FAQ{
-  id String @id @default(uuid())
+model FAQ {
+  id       String @id @default(uuid())
   question String
-  answer String
+  answer   String
 }
