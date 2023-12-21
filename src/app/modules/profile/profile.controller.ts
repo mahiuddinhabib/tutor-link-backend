@@ -1,6 +1,7 @@
 import { User } from '@prisma/client';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import { IUploadFile } from '../../../interfaces/file';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { ProfileService } from './profile.service';
@@ -18,9 +19,14 @@ const getProfile = catchAsync(async (req: Request, res: Response) => {
 
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
   const id = req.user?.userId;
-  const updatedData = req.body;
 
-  const result = await ProfileService.updateProfile(id, updatedData);
+  const updatedData = req.body
+
+  const file = req.file as IUploadFile;
+
+  // console.log(req.file);
+
+  const result = await ProfileService.updateProfile(id, updatedData, file);
 
   sendResponse<Partial<User>>(res, {
     success: true,
@@ -32,5 +38,5 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
 
 export const ProfileController = {
   getProfile,
-  updateProfile
+  updateProfile,
 };

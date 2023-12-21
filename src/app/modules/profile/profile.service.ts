@@ -3,6 +3,8 @@ import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import ApiError from '../../../errors/ApiError';
 import { excludeField } from '../../../helpers/excludeField';
+import { fileUploadHelper } from '../../../helpers/fileUploadHelper';
+import { ICloudinaryResponse, IUploadFile } from '../../../interfaces/file';
 import prisma from '../../../shared/prisma';
 
 const getProfile = async (
@@ -22,7 +24,8 @@ const getProfile = async (
 
 const updateProfile = async (
   id: string,
-  payload: Partial<User>
+  updatedUserData: Partial<User>,
+  file?: IUploadFile
 ): Promise<User | null> => {
   const isExist = await prisma.user.findUnique({
     where: {
@@ -34,11 +37,21 @@ const updateProfile = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found !');
   }
 
+  // console.log(file);
+
+  if (file) {
+    const uploadedImg = (await fileUploadHelper.uploadToCloudinary(
+      file
+    )) as ICloudinaryResponse;
+    // console.log(uploadedImg);
+    updatedUserData.profileImg = uploadedImg.secure_url;
+  }
+
   const result = await prisma.user.update({
     where: {
       id,
     },
-    data: payload,
+    data: updatedUserData,
   });
   return result;
 };
