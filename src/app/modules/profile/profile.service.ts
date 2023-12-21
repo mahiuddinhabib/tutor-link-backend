@@ -4,9 +4,9 @@ import { JwtPayload } from 'jsonwebtoken';
 import ApiError from '../../../errors/ApiError';
 import { excludeField } from '../../../helpers/excludeField';
 import { fileUploadHelper } from '../../../helpers/fileUploadHelper';
+import { hashingHelper } from '../../../helpers/hashingHelpers';
 import { ICloudinaryResponse, IUploadFile } from '../../../interfaces/file';
 import prisma from '../../../shared/prisma';
-import { hashingHelper } from '../../../helpers/hashingHelpers';
 
 const getProfile = async (
   user: JwtPayload | null
@@ -19,8 +19,8 @@ const getProfile = async (
   if (!result) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  const profileWithoutId = excludeField(result, ['id']);
-  return profileWithoutId;
+  const profileWithoutIdPassword = excludeField(result, ['id', 'password']);
+  return profileWithoutIdPassword;
 };
 
 const updateProfile = async (
