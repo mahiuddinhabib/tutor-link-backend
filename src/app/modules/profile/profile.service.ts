@@ -6,6 +6,7 @@ import { excludeField } from '../../../helpers/excludeField';
 import { fileUploadHelper } from '../../../helpers/fileUploadHelper';
 import { ICloudinaryResponse, IUploadFile } from '../../../interfaces/file';
 import prisma from '../../../shared/prisma';
+import { hashingHelper } from '../../../helpers/hashingHelpers';
 
 const getProfile = async (
   user: JwtPayload | null
@@ -33,12 +34,20 @@ const updateProfile = async (
     },
   });
 
+  //Check if user exist or not
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found !');
   }
 
-  // console.log(file);
+  //If password is updated then encrypt it
+  if (updatedUserData.password) {
+    const hashed_password = await hashingHelper.encrypt_password(
+      updatedUserData.password
+    );
+    updatedUserData.password = hashed_password;
+  }
 
+  //If file uploaded then upload to cloudinary
   if (file) {
     const uploadedImg = (await fileUploadHelper.uploadToCloudinary(
       file

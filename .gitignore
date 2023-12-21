@@ -5,4 +5,3 @@ node_modules
 # Temporary ignore
 src/app/modules/book
 src/app/modules/booking1
-src/helpers/hashingHelpers.ts
