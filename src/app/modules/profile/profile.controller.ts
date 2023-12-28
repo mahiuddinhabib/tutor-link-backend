@@ -36,7 +36,25 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+  const id = req.user?.userId;
+
+  const payload = req.body
+
+  const result = await ProfileService.changePassword(id, payload);
+
+  sendResponse<Partial<User>>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Password updated successfully',
+    data: result,
+  });
+});
+
+
+
 export const ProfileController = {
   getProfile,
   updateProfile,
+  changePassword,
 };

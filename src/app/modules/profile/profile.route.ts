@@ -4,6 +4,7 @@ import { fileUploadHelper } from '../../../helpers/fileUploadHelper';
 import auth from '../../middlewares/auth';
 import { ProfileController } from './profile.controller';
 import { ProfileValidation } from './profile.validation';
+import validateRequest from '../../middlewares/validateRequest';
 const router = express.Router();
 
 router.get(
@@ -35,6 +36,17 @@ router.patch(
   }
   // validateRequest(ProfileValidation.updateProfileZodSchema),
   // ProfileController.updateProfile
+);
+router.patch(
+  '/change-password',
+  auth(
+    USER_ROLE.ADMIN,
+    USER_ROLE.CUSTOMER,
+    USER_ROLE.SUPER_ADMIN,
+    USER_ROLE.TUTOR
+  ),
+  validateRequest(ProfileValidation.updateProfileZodSchema),
+  ProfileController.changePassword
 );
 
 export const ProfileRoutes = router;
