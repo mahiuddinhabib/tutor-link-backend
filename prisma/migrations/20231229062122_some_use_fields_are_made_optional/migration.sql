@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Service" ALTER COLUMN "coverImg" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "contactNo" DROP NOT NULL,
+ALTER COLUMN "address" DROP NOT NULL,
+ALTER COLUMN "profileImg" DROP NOT NULL;

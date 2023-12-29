@@ -15,10 +15,10 @@ model User {
   name        String
   email       String        @unique
   password    String
-  role        String
-  contactNo   String
-  address     String
-  profileImg  String
+  role        String       @default("customer")
+  contactNo   String?
+  address     String?
+  profileImg  String?
   bookings    Booking[]
   Feedback    Feedback[]
   Service     Service[]
@@ -36,6 +36,7 @@ model Service {
   title     String
   tutorId   String
   price     Float
+  coverImg  String?
   subjectId String
 
   subject          Subject            @relation(fields: [subjectId], references: [id])

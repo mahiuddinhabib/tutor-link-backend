@@ -11,18 +11,9 @@ const createUserZodSchema = z.object({
     password: z.string({
       required_error: 'Password is required',
     }),
-    role: z.string({
-      required_error: 'Role is required',
-    }),
-    contactNo: z.string({
-      required_error: 'Contact Number is required',
-    }),
-    address: z.string({
-      required_error: 'Address is required',
-    }),
-    profileImg: z.string({
-      required_error: 'Profile img is required',
-    }),
+    role: z.string().optional(),
+    contactNo: z.string().optional(),
+    address: z.string().optional(),
   }),
 });
 

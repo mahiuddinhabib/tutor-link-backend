@@ -10,10 +10,26 @@ import {
   serviceSearchableFields,
 } from './service.constant';
 import { IServiceFilterableField } from './service.interface';
+import { ICloudinaryResponse, IUploadFile } from '../../../interfaces/file';
+import { fileUploadHelper } from '../../../helpers/fileUploadHelper';
 
-const createService = async (payload: Service): Promise<Service | null> => {
+const createService = async (
+  /* payload: Service */
+  serviceData: Service,
+  file?: IUploadFile
+): Promise<Service | null> => {
+
+  //If file uploaded then upload to cloudinary
+  if (file) {
+    const uploadedImg = (await fileUploadHelper.uploadToCloudinary(
+      file
+    )) as ICloudinaryResponse;
+    // console.log(uploadedImg);
+    serviceData.coverImg = uploadedImg.secure_url;
+  }
+
   const createdService = await prisma.service.create({
-    data: payload,
+    data: serviceData,
     include: {
       tutor: true,
       subject: true,

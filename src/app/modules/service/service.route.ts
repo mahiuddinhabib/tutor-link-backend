@@ -1,16 +1,27 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { ServiceValidation } from './service.validation';
 import { ServiceController } from './service.controller';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from '../../../enums/user';
+import { fileUploadHelper } from '../../../helpers/fileUploadHelper';
 const router = express.Router();
 
 router.post(
   '/create-service',
   auth(USER_ROLE.ADMIN),
-  validateRequest(ServiceValidation.createServiceZodSchema),
-  ServiceController.createService
+  fileUploadHelper.upload.single('coverImg'),
+
+  (req: Request, res: Response, next: NextFunction) => {
+    // console.log(req.body);
+    req.body = ServiceValidation.createServiceZodSchema.parse(
+      JSON.parse(req.body.data)
+    );
+    return ServiceController.createService(req, res, next);
+  }
+
+  // validateRequest(ServiceValidation.createServiceZodSchema),
+  // ServiceController.createService
 );
 
 router.get('/', ServiceController.getAllServices);

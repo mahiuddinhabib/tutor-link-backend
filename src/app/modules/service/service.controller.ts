@@ -7,13 +7,16 @@ import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { ServiceService } from './service.service';
 import { serviceFilterableFields } from './service.constant';
+import { IUploadFile } from '../../../interfaces/file';
 
 const createService: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const {price, ...rest} = req.body;
     const numPrice = Number(price);
 
-    const result = await ServiceService.createService({price: numPrice, ...rest});
+    const file = req.file as IUploadFile;
+
+    const result = await ServiceService.createService({price: numPrice, ...rest}, file);
 
     sendResponse<Service>(res, {
       success: true,

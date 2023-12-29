@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const createServiceZodSchema = z.object({
-  body: z.object({
+  // body: z.object({
     title: z.string({
       required_error: 'Title is required',
     }),
@@ -14,7 +14,7 @@ const createServiceZodSchema = z.object({
     subjectId: z.string({
       required_error: 'Subject id is required',
     }),
-  }),
+  // }),
 });
 
 const updateServiceZodSchema = z.object({
